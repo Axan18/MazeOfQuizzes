@@ -103,6 +103,15 @@ public class DBManager {
                         COLUMN_ANSWER_ANSWER + " TEXT NOT NULL, " +
                         COLUMN_ANSWER_IS_CORRECT + " INTEGER NOT NULL, " +
                         COLUMN_ANSWER_QUESTION_ID + " INTEGER NOT NULL)";
+        try (Connection connection = getConnection();
+                Statement statement = connection.createStatement()) {
+                statement.execute(categories);
+                statement.execute(quizzes);
+                statement.execute(questions);
+                statement.execute(answers);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
     }
 
     public void addCategory(Category category) {
@@ -262,6 +271,4 @@ public class DBManager {
         }
         return answers;
     }
-    
-
 }
