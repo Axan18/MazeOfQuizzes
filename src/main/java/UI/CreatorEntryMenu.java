@@ -21,6 +21,12 @@ public class CreatorEntryMenu extends JPanel implements Menu {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(Color.RED);
         buttonAdjustments(panel, createQuiz, createCategory, backToMenu);
+        createQuiz.setActionCommand("createQuiz");
+        createCategory.setActionCommand("createCategory");
+        backToMenu.setActionCommand("backToMenu");
+        createQuiz.addActionListener(screenManager);
+        createCategory.addActionListener(screenManager);
+        backToMenu.addActionListener(screenManager);
         this.add(panel, BorderLayout.CENTER);
         setVisible(true);
     }

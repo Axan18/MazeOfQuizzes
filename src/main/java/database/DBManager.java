@@ -18,8 +18,6 @@ public class DBManager {
     public static final String COLUMN_QUIZ_DESCRIPTION = "description";
     public static final String COLUMN_QUIZ_NUMBER_OF_QUESTIONS = "number_of_questions";
     public static final String COLUMN_QUIZ_QUIZ_TYPE = "quiz_type";
-    public static final String COLUMN_QUIZ_IS_IMAGE = "is_image";
-    public static final String COLUMN_QUIZ_IS_TEXT = "is_text";
     public static final String COLUMN_QUIZ_TIME_LIMIT = "time_limit";
     public static final String COLUMN_QUIZ_IS_DONE = "is_done";
     public static final String COLUMN_QUIZ_IN_ORDER = "in_order";
@@ -84,9 +82,7 @@ public class DBManager {
                         COLUMN_QUIZ_NAME + " TEXT NOT NULL, " +
                         COLUMN_QUIZ_DESCRIPTION + " TEXT NOT NULL, " +
                         COLUMN_QUIZ_NUMBER_OF_QUESTIONS + " INTEGER NOT NULL, " +
-                        COLUMN_QUIZ_QUIZ_TYPE + " TEXT NOT NULL, " +
-                        COLUMN_QUIZ_IS_IMAGE + " INTEGER NOT NULL, " +
-                        COLUMN_QUIZ_IS_TEXT + " INTEGER NOT NULL, " +
+                        COLUMN_QUIZ_QUIZ_TYPE + " INTEGER NOT NULL, " +
                         COLUMN_QUIZ_TIME_LIMIT + " INTEGER NOT NULL, " +
                         COLUMN_QUIZ_IS_DONE + " INTEGER NOT NULL, " +
                         COLUMN_QUIZ_IN_ORDER + " INTEGER NOT NULL, " +
@@ -134,16 +130,14 @@ public class DBManager {
     }
 
     public void addQuiz(Quiz quiz) {
-        String query = "INSERT INTO " + TABLE_QUIZZES + "(" + COLUMN_QUIZ_NAME + ", " + COLUMN_QUIZ_DESCRIPTION + ", " + COLUMN_QUIZ_NUMBER_OF_QUESTIONS + ", " + COLUMN_QUIZ_QUIZ_TYPE + ", " + COLUMN_QUIZ_IS_IMAGE + ", " + COLUMN_QUIZ_IS_TEXT + ", " + COLUMN_QUIZ_TIME_LIMIT + ", " + COLUMN_QUIZ_IS_DONE + ", " + COLUMN_QUIZ_IN_ORDER + ", " + COLUMN_QUIZ_HIGH_SCORE + ", " + COLUMN_QUIZ_CATEGORY_ID + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO " + TABLE_QUIZZES + "(" + COLUMN_QUIZ_NAME + ", " + COLUMN_QUIZ_DESCRIPTION + ", " + COLUMN_QUIZ_NUMBER_OF_QUESTIONS + ", " + COLUMN_QUIZ_QUIZ_TYPE + ", " + COLUMN_QUIZ_TIME_LIMIT + ", " + COLUMN_QUIZ_IS_DONE + ", " + COLUMN_QUIZ_IN_ORDER + ", " + COLUMN_QUIZ_HIGH_SCORE + ", " + COLUMN_QUIZ_CATEGORY_ID + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = getConnection()) {
             connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, quiz.getName());
                 preparedStatement.setString(2, quiz.getDescription());
                 preparedStatement.setInt(3, quiz.getNumberOfQuestions());
-                preparedStatement.setString(4, quiz.getQuizType());
-                preparedStatement.setInt(5, quiz.isImage());
-                preparedStatement.setInt(6, quiz.isText());
+                preparedStatement.setInt(4, quiz.getQuizType());
                 preparedStatement.setInt(7, quiz.getTimeLimit());
                 preparedStatement.setInt(8, quiz.isDone());
                 preparedStatement.setInt(9, quiz.isInOrder());
@@ -211,7 +205,7 @@ public class DBManager {
             ResultSet resultSet = statement.executeQuery(query)){
             while(resultSet.next())
             {
-                Quiz quiz = new Quiz(resultSet.getInt(COLUMN_QUIZ_ID), resultSet.getString(COLUMN_QUIZ_NAME), resultSet.getString(COLUMN_QUIZ_DESCRIPTION), resultSet.getInt(COLUMN_QUIZ_NUMBER_OF_QUESTIONS), resultSet.getString(COLUMN_QUIZ_QUIZ_TYPE), resultSet.getInt(COLUMN_QUIZ_IS_IMAGE), resultSet.getInt(COLUMN_QUIZ_IS_TEXT), resultSet.getInt(COLUMN_QUIZ_TIME_LIMIT), resultSet.getInt(COLUMN_QUIZ_IS_DONE), resultSet.getInt(COLUMN_QUIZ_IN_ORDER), resultSet.getInt(COLUMN_QUIZ_HIGH_SCORE), resultSet.getInt(COLUMN_QUIZ_CATEGORY_ID));
+                Quiz quiz = new Quiz(resultSet.getInt(COLUMN_QUIZ_ID), resultSet.getString(COLUMN_QUIZ_NAME), resultSet.getString(COLUMN_QUIZ_DESCRIPTION), resultSet.getInt(COLUMN_QUIZ_NUMBER_OF_QUESTIONS), resultSet.getInt(COLUMN_QUIZ_QUIZ_TYPE), resultSet.getInt(COLUMN_QUIZ_TIME_LIMIT), resultSet.getInt(COLUMN_QUIZ_IS_DONE), resultSet.getInt(COLUMN_QUIZ_IN_ORDER), resultSet.getInt(COLUMN_QUIZ_HIGH_SCORE), resultSet.getInt(COLUMN_QUIZ_CATEGORY_ID));
                 quizzes.add(quiz);
             }
         } catch (SQLException e) {

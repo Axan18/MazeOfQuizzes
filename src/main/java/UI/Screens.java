@@ -2,7 +2,9 @@ package UI;
 
 public enum Screens {
     START_MENU,
-    QUIZZES_MENU,
-    QUIZ_CREATOR;
+    QUIZ_MENU,
+    QUIZ_CREATOR_MENU,
+    QUIZ_CREATOR,
+    CATEGORY_CREATOR
 
 }

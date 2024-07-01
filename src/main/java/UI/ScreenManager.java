@@ -47,11 +47,18 @@ public class ScreenManager implements ActionListener {
                 ((StartMenu) panel).showMenu();
                 break;
             }
-            case QUIZ_CREATOR: {
+            case QUIZ_CREATOR_MENU: {
                 if (!(panel instanceof CreatorEntryMenu)) {
                     panel = new CreatorEntryMenu();
                 }
                 ((CreatorEntryMenu) panel).showMenu();
+                break;
+            }
+            case QUIZ_CREATOR: {
+                if (!(panel instanceof QuizCreator)) {
+                    panel = new QuizCreator();
+                }
+                ((QuizCreator) panel).showCreator();
                 break;
             }
         }
@@ -64,9 +71,16 @@ public class ScreenManager implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if("creator".equals(e.getActionCommand()))
         {
-            this.setCurrentScreen(Screens.QUIZ_CREATOR);
+            this.setCurrentScreen(Screens.QUIZ_CREATOR_MENU);
         } else if ("quizzes".equals(e.getActionCommand())) {
-            this.setCurrentScreen(Screens.QUIZZES_MENU);
+            this.setCurrentScreen(Screens.QUIZ_MENU);
+        } else if ("createQuiz".equals(e.getActionCommand())) {
+            this.setCurrentScreen(Screens.QUIZ_CREATOR);
+        } else if ("createCategory".equals(e.getActionCommand())) {
+            this.setCurrentScreen(Screens.CATEGORY_CREATOR);
+        } else if ("backToMenu".equals(e.getActionCommand())) {
+            this.setCurrentScreen(Screens.START_MENU);
+
         }
         this.showScreen();
     }
