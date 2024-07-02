@@ -61,6 +61,13 @@ public class ScreenManager implements ActionListener {
                 ((QuizCreator) panel).showCreator();
                 break;
             }
+            case CATEGORY_CREATOR: {
+                if (!(panel instanceof CategoryCreator)) {
+                    panel = new CategoryCreator();
+                }
+                ((CategoryCreator) panel).showCreator();
+                break;
+            }
         }
         window.add(panel, BorderLayout.CENTER);
         window.revalidate(); // re-layout the components
