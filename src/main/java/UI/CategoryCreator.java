@@ -11,7 +11,7 @@ public class CategoryCreator extends JPanel implements Creator {
     JTextArea categoryDescription = new JTextArea();
     JScrollPane categoryDesc = new JScrollPane(categoryDescription);
     JButton createCategory = new JButton("Create Category");
-    JButton getCreateCategoryAndAddQuestion = new JButton("Create and Add Question");
+    JButton createCategoryAndAddQuizz = new JButton("Create and Add Question");
     JButton backToMenu = new JButton("Back to Menu");
 
     public CategoryCreator() {
@@ -27,10 +27,12 @@ public class CategoryCreator extends JPanel implements Creator {
 
         categoryDescription.setLineWrap(true);
         categoryDescription.setWrapStyleWord(true);
-        panel = componentsSetter(panel, 2,categoryBuilder, categoryNameLabel,categoryDescriptionLabel, categoryName, categoryDesc, createCategory, getCreateCategoryAndAddQuestion, backToMenu);
+        panel = componentsSetter(panel, 2,categoryBuilder, categoryNameLabel,categoryDescriptionLabel, categoryName, categoryDesc, createCategory, createCategoryAndAddQuizz, backToMenu);
 
         //adjustments
+        //TODO: add action listeners and adding quiz to DB
         categoryBuilder.setFont(new Font("Arial", Font.BOLD, 40));
+        createCategoryAndAddQuizz.setActionCommand("createQuiz");
         backToMenu.setActionCommand("backToMenu");
         backToMenu.addActionListener(ScreenManager.getInstance());
 

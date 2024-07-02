@@ -36,15 +36,6 @@ public class QuizCreator extends JPanel implements Creator{
 
         //adjustments
         quizBuilder.setFont(new Font("Arial", Font.BOLD, 40));
-        quizRandom.setFont(new Font("Arial", Font.PLAIN, 20));
-        quizRandom.setBackground(Color.GREEN);
-        quizRandom.setPreferredSize(new Dimension(300, 50));
-        createQuiz.setPreferredSize(new Dimension(300, 50));
-        createQuiz.setFont(new Font("Arial", Font.PLAIN, 20));
-        createAndAddQuestion.setPreferredSize(new Dimension(300, 50));
-        createAndAddQuestion.setFont(new Font("Arial", Font.PLAIN, 20));
-        backToMenu.setPreferredSize(new Dimension(300, 50));
-        backToMenu.setFont(new Font("Arial", Font.PLAIN, 20));
         backToMenu.setActionCommand("backToMenu");
         backToMenu.addActionListener(ScreenManager.getInstance());
         //TODO: add action listeners and adding quiz to DB
