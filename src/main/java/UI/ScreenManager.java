@@ -68,10 +68,17 @@ public class ScreenManager implements ActionListener {
                 ((CategoryCreator) panel).showCreator();
                 break;
             }
+            case QUESTION_CREATOR: {
+                if (!(panel instanceof QuestionCreator)) {
+                    panel = new QuestionCreator();
+                }
+                ((QuestionCreator) panel).showCreator();
+                break;
+            }
         }
         window.add(panel, BorderLayout.CENTER);
-        window.revalidate(); // re-layout the components
-        window.repaint(); // repaint the JFrame
+        window.revalidate();
+        window.repaint();
         window.setVisible(true);
     }
     @Override
@@ -87,7 +94,8 @@ public class ScreenManager implements ActionListener {
             this.setCurrentScreen(Screens.CATEGORY_CREATOR);
         } else if ("backToMenu".equals(e.getActionCommand())) {
             this.setCurrentScreen(Screens.START_MENU);
-
+        } else if ("createQuestion".equals(e.getActionCommand())) {
+            this.setCurrentScreen(Screens.QUESTION_CREATOR);
         }
         this.showScreen();
     }

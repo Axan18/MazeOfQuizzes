@@ -18,6 +18,7 @@ public class QuizCreator extends JPanel implements Creator{
     JButton createQuiz = new JButton("Create Quiz");
     JButton createAndAddQuestion = new JButton("Create and Add Question");
     JButton backToMenu = new JButton("Back to Menu");
+    ScreenManager screenManager = ScreenManager.getInstance();
     QuizCreator() {
         this.setSize(1920, 1080);
         this.setLayout(new BorderLayout());
@@ -36,8 +37,12 @@ public class QuizCreator extends JPanel implements Creator{
 
         //adjustments
         quizBuilder.setFont(new Font("Arial", Font.BOLD, 40));
+        createAndAddQuestion.setActionCommand("createQuestion");
+        createQuiz.setActionCommand("createQuiz");
         backToMenu.setActionCommand("backToMenu");
-        backToMenu.addActionListener(ScreenManager.getInstance());
+        backToMenu.addActionListener(screenManager);
+        createAndAddQuestion.addActionListener(screenManager);
+        createQuiz.addActionListener(screenManager);
         //TODO: add action listeners and adding quiz to DB
 
 
