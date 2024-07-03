@@ -1,9 +1,15 @@
 package database;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+* Database manager class that handles all database operations.
+* Singleton pattern is used to ensure that only one instance of the class is created.
+*/
 public class DBManager {
     private static final String URL = "jdbc:sqlite:quiz.db";
     public static final String TABLE_CATEGORIES = "Categories";
@@ -40,6 +46,10 @@ public class DBManager {
     private DBManager() {
     }
 
+    /**
+     * DBManager instance getter
+     * @return instance of the DBManager
+     */
     public static DBManager getInstance() {
         if (instance == null) {
             synchronized (DBManager.class) {
@@ -51,6 +61,10 @@ public class DBManager {
         return instance;
     }
 
+    /**
+     * Method that returns a connection to the database
+     * @return Connection object
+     */
     public Connection getConnection() {
         Connection connection = null;
         try {
@@ -61,6 +75,10 @@ public class DBManager {
         return connection;
     }
 
+    /**
+     * Method that closes the connection to the database
+     * @param connection current open Connection
+     */
     public void closeConnection(Connection connection) {
         try {
             connection.close();
@@ -69,6 +87,9 @@ public class DBManager {
         }
     }
 
+    /**
+     * Method that creates all tables in the database
+     */
     public void createTables() {
         //could use string builder here but it doesn't really matter
         String categories = "CREATE TABLE IF NOT EXISTS " + TABLE_CATEGORIES + " (" +
@@ -110,6 +131,10 @@ public class DBManager {
             }
     }
 
+    /**
+     * Method that adds a new category to the database
+     * @param category Category object to be added
+     */
     public void addCategory(Category category) {
         String query = "Insert INTO " + TABLE_CATEGORIES + "(" + COLUMN_CATEGORY_NAME + ", " + COLUMN_CATEGORY_DESCRIPTION + ", " + COLUMN_CATEGORY_NUMBER_OF_QUIZZES + ") VALUES (?, ?, ?)";
         try (Connection connection = getConnection()) {
@@ -129,6 +154,10 @@ public class DBManager {
         }
     }
 
+    /**
+     * Method that adds a new quiz to the database
+     * @param quiz Quiz object to be added
+     */
     public void addQuiz(Quiz quiz) {
         String query = "INSERT INTO " + TABLE_QUIZZES + "(" + COLUMN_QUIZ_NAME + ", " + COLUMN_QUIZ_DESCRIPTION + ", " + COLUMN_QUIZ_NUMBER_OF_QUESTIONS + ", " + COLUMN_QUIZ_QUIZ_TYPE + ", " + COLUMN_QUIZ_TIME_LIMIT + ", " + COLUMN_QUIZ_IS_DONE + ", " + COLUMN_QUIZ_IN_ORDER + ", " + COLUMN_QUIZ_HIGH_SCORE + ", " + COLUMN_QUIZ_CATEGORY_ID + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = getConnection()) {
@@ -154,6 +183,10 @@ public class DBManager {
         }
     }
 
+    /**
+     * Method that adds a new question to the database
+     * @param question
+     */
     public void addQuestion(Question question) {
         //TODO: add checking if quiz exists
 
@@ -174,6 +207,10 @@ public class DBManager {
         }
     }
 
+    /**
+     * Method that adds a new answer to the database
+     * @param answer Answer object to be added
+     */
     public void addAnswer(Answer answer) {
         //TODO: add checking if question exists
 
@@ -194,10 +231,15 @@ public class DBManager {
             e.printStackTrace();
         }
     }
-    public List<Quiz> getQuizzes(Integer categoryId) {
+    /**
+     * Method that returns all quizzes for given categoryID from the database
+     * @param categoryID category id to filter quizzes by, if null all quizzes are returned
+     * @return List of Quiz objects
+     */
+    public List<Quiz> getQuizzesByCategory(Integer categoryID) {
         String query = "SELECT * FROM " + TABLE_QUIZZES;
-        if(categoryId != null) {
-            query += " WHERE " + COLUMN_QUIZ_CATEGORY_ID + " = " + categoryId;
+        if(categoryID != null) {
+            query += " WHERE " + COLUMN_QUIZ_CATEGORY_ID + " = " + categoryID;
         }
         List<Quiz> quizzes = new LinkedList<>();
         try (Connection connection = getConnection();
@@ -213,6 +255,34 @@ public class DBManager {
         }
         return quizzes;
     }
+    /**
+     * Method that returns all quizzes from the database
+     * @return List of Quiz objects
+     */
+    public List<Quiz> getQuizzes() {
+        return getQuizzesByCategory(null);
+    }
+    //TODO: check if it is needed
+    public Quiz getQuiz(String name) {
+        String query = "SELECT * FROM " + TABLE_QUIZZES + " WHERE " + COLUMN_QUIZ_NAME + " = ?";
+        Quiz quiz = null;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, name);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    quiz = new Quiz(resultSet.getInt(COLUMN_QUIZ_ID), resultSet.getString(COLUMN_QUIZ_NAME), resultSet.getString(COLUMN_QUIZ_DESCRIPTION), resultSet.getInt(COLUMN_QUIZ_NUMBER_OF_QUESTIONS), resultSet.getInt(COLUMN_QUIZ_QUIZ_TYPE), resultSet.getInt(COLUMN_QUIZ_TIME_LIMIT), resultSet.getInt(COLUMN_QUIZ_IS_DONE), resultSet.getInt(COLUMN_QUIZ_IN_ORDER), resultSet.getInt(COLUMN_QUIZ_HIGH_SCORE), resultSet.getInt(COLUMN_QUIZ_CATEGORY_ID));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return quiz;
+    }
+    /**
+     * Method that returns all categories from the database
+     * @return List of Category objects
+     */
     public List<Category> getCategories() {
         String query = "SELECT * FROM " + TABLE_CATEGORIES;
         List<Category> categories = new LinkedList<>();
@@ -229,10 +299,15 @@ public class DBManager {
         }
         return categories;
     }
-    public List<Question> getQuestions(Integer quizId) {
+    /**
+     * Method that returns all questions for given quizID from the database
+     * @param quizID quiz id to filter questions by
+     * @return List of Question objects
+     */
+    public List<Question> getQuestions(Integer quizID) {
         String query = "SELECT * FROM " + TABLE_QUESTIONS;
-        if (quizId != null) {
-            query += " WHERE " + COLUMN_QUESTION_QUIZ_ID + " = " + quizId;
+        if (quizID != null) {
+            query += " WHERE " + COLUMN_QUESTION_QUIZ_ID + " = " + quizID;
         }
         List<Question> questions = new LinkedList<>();
         try (Connection connection = getConnection();
@@ -247,6 +322,11 @@ public class DBManager {
         }
         return questions;
     }
+    /**
+     * Method that returns all answers for given questionID from the database
+     * @param questionId question id to filter answers by
+     * @return List of Answer objects
+     */
     public List<Answer> getAnswers(Integer questionId) {
         String query = "SELECT * FROM " + TABLE_ANSWERS;
         if (questionId != null) {

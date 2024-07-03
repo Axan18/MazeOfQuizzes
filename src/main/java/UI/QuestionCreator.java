@@ -20,11 +20,6 @@ public class QuestionCreator extends JPanel implements Creator {
         JPanel panel = new JPanel();
         panel.setBackground(Color.GREEN);
         panel.setLayout(new GridBagLayout());
-
-        //panel = componentsSetter(panel, 2,questionBuilder, questionLabel, question, createQuestion, backToMenu);
-
-        //adjustments
-
         int numberOfQuestions = 0;
         while(numberOfQuestions > 4 || numberOfQuestions < 1)
         {
@@ -48,7 +43,7 @@ public class QuestionCreator extends JPanel implements Creator {
         fields.add(createQuestion);
         fields.add(backToMenu);
         JComponent[] components = fields.toArray(new JComponent[0]);
-        panel = questionsComponentsSetter(panel, numberOfQuestions,components);
+        panel = questionsComponentsSetter(panel, components);
 
         questionBuilder.setFont(new Font("Arial", Font.BOLD, 40));
         backToMenu.setActionCommand("backToMenu");

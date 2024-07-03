@@ -2,9 +2,10 @@ package UI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+/**
+ * Class for the start menu.
+ * @see Menu
+ */
 public class StartMenu extends JPanel implements Menu{
     JLabel label = new JLabel("Maze Of Quizzes");
     JButton creator = new JButton("Quiz creator");
@@ -19,6 +20,10 @@ public class StartMenu extends JPanel implements Menu{
         //screenManager.setCurrentScreen(Screens.START_MENU);
     }
 
+    /**
+     * Shows the start menu.
+     */
+    @Override
     public void showMenu() {
         this.removeAll();
         JPanel panel = new JPanel();

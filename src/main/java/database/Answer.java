@@ -1,5 +1,8 @@
 package database;
 
+/**
+ * Answer class
+ */
 public class Answer {
     private int id;
     private String answer;

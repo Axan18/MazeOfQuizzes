@@ -3,6 +3,13 @@ package UI;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * CategoryCreator class is a class that creates a category creation menu screen.
+ * Used to create a category and add it to the database.
+ * @see JPanel
+ * @see Creator
+ * @see ScreenManager
+ */
 public class CategoryCreator extends JPanel implements Creator {
     JLabel categoryBuilder = new JLabel("Category Builder");
     JLabel categoryNameLabel = new JLabel("Category Name");
@@ -18,6 +25,12 @@ public class CategoryCreator extends JPanel implements Creator {
         this.setSize(1920, 1080);
         this.setLayout(new BorderLayout());
     }
+
+    /**
+     * Method to show the creator screen.
+     * A new panel is created and components are set on the panel.
+     * @see Creator
+     */
     @Override
     public void showCreator()
     {

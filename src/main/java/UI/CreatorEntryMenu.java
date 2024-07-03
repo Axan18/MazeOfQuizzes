@@ -3,6 +3,11 @@ package UI;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * CreatorEntryMenu class
+ * This class is the menu that allows the user to choose between creating a quiz or a category.
+ * @see Menu
+ */
 public class CreatorEntryMenu extends JPanel implements Menu {
     ScreenManager screenManager;
     JButton createQuiz = new JButton("Create Quiz");

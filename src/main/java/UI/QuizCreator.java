@@ -3,6 +3,9 @@ package UI;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Class for creating a quiz.
+ */
 public class QuizCreator extends JPanel implements Creator{
     JLabel quizBuilder = new JLabel("Quiz Builder");
     JLabel quizNameLabel = new JLabel("Quiz Name");

@@ -5,6 +5,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Singleton class that manages the screens and the transitions between them.
+ */
 public class ScreenManager implements ActionListener {
     private Screens currentScreen = Screens.START_MENU;
     private static volatile ScreenManager screenManager;
@@ -14,6 +17,10 @@ public class ScreenManager implements ActionListener {
     private ScreenManager() {
     }
 
+    /**
+     * Returns the instance of the ScreenManager.
+     * @return
+     */
     public static ScreenManager getInstance() {
         if (screenManager == null) {
             synchronized (ScreenManager.class) {
@@ -24,6 +31,10 @@ public class ScreenManager implements ActionListener {
         }
         return screenManager;
     }
+    /**
+     * Sets the window of the ScreenManager.
+     * @param window the JFrame window to be set
+     */
     public void setWindow(JFrame window) {
         this.window = window;
         panel = new StartMenu();
@@ -32,11 +43,17 @@ public class ScreenManager implements ActionListener {
     public Screens getCurrentScreen() {
         return currentScreen;
     }
-
+    /**
+     * Sets the current screen of the ScreenManager.
+     * @param screen the screen to be set
+     * @see Screens
+     */
     public void setCurrentScreen(Screens screen) {
         currentScreen = screen;
     }
-
+    /**
+     * Shows the start screen and manipulates changes of them.
+     */
     public void showScreen() {
         window.remove(panel);
         switch (currentScreen) {
@@ -81,6 +98,10 @@ public class ScreenManager implements ActionListener {
         window.repaint();
         window.setVisible(true);
     }
+    /**
+     * Handles the change of screens.
+     * @param e the action event
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if("creator".equals(e.getActionCommand()))
