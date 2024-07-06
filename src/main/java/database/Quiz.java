@@ -1,5 +1,7 @@
 package database;
 
+import java.util.Objects;
+
 public class Quiz {
     private int id;
     private String name;
@@ -7,17 +9,18 @@ public class Quiz {
     private int numberOfQuestions;
     private int quizType;
     private int timeLimit;
-    private int isDone;
-    private int inOrder;
+    private boolean isDone;
+    private boolean inOrder;
     private int highScore;
     private int categoryId;
 
-    public Quiz(int id, String name, String description, int numberOfQuestions, int quizType, int timeLimit, int isDone, int inOrder, int highScore, int categoryId) {
+    public Quiz(int id, String name, String description, int numberOfQuestions, int timeLimit, boolean isDone, boolean inOrder, int highScore, int categoryId) throws EmptyFieldException{
+        if(Objects.equals(name, "") || Objects.equals(description, ""))
+            throw new EmptyFieldException("Please fill in all fields");
         this.id = id;
         this.name = name;
         this.description = description;
         this.numberOfQuestions = numberOfQuestions;
-        this.quizType = quizType;
         this.timeLimit = timeLimit;
         this.isDone = isDone;
         this.inOrder = inOrder;
@@ -49,11 +52,11 @@ public class Quiz {
         return timeLimit;
     }
 
-    public int isDone() {
+    public boolean isDone() {
         return isDone;
     }
 
-    public int isInOrder() {
+    public boolean isInOrder() {
         return inOrder;
     }
 

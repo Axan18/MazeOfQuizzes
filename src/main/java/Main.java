@@ -1,4 +1,5 @@
 import UI.*;
+import database.DBManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,6 +13,7 @@ public class Main {
         window.setVisible(true);
         window.setTitle("Maze Of Quizzes");
         window.setLayout(new BorderLayout());
+        DBManager.getInstance().createTables();
         screenManager = ScreenManager.getInstance();
         screenManager.setWindow(window);
         screenManager.setCurrentScreen(Screens.START_MENU);

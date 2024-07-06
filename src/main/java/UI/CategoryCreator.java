@@ -1,7 +1,12 @@
 package UI;
 
+import database.Category;
+import database.DBManager;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * CategoryCreator class is a class that creates a category creation menu screen.
@@ -10,7 +15,7 @@ import java.awt.*;
  * @see Creator
  * @see ScreenManager
  */
-public class CategoryCreator extends JPanel implements Creator {
+public class CategoryCreator extends JPanel implements Creator, ActionListener {
     JLabel categoryBuilder = new JLabel("Category Builder");
     JLabel categoryNameLabel = new JLabel("Category Name");
     JTextField categoryName = new JTextField();
@@ -20,6 +25,7 @@ public class CategoryCreator extends JPanel implements Creator {
     JButton createCategory = new JButton("Create Category");
     JButton createCategoryAndAddQuiz = new JButton("Create and Add Quiz");
     JButton backToMenu = new JButton("Back to Menu");
+    ScreenManager screenManager = ScreenManager.getInstance();
 
     public CategoryCreator() {
         this.setSize(1920, 1080);
@@ -43,13 +49,23 @@ public class CategoryCreator extends JPanel implements Creator {
         panel = componentsSetter(panel, 2,categoryBuilder, categoryNameLabel,categoryDescriptionLabel, categoryName, categoryDesc, createCategory, createCategoryAndAddQuiz, backToMenu);
 
         //adjustments
-        //TODO: add action listeners and adding quiz to DB
         categoryBuilder.setFont(new Font("Arial", Font.BOLD, 40));
         createCategoryAndAddQuiz.setActionCommand("createQuiz");
         backToMenu.setActionCommand("backToMenu");
-        backToMenu.addActionListener(ScreenManager.getInstance());
+        backToMenu.addActionListener(screenManager);
+        createCategoryAndAddQuiz.addActionListener(screenManager);
+        createCategoryAndAddQuiz.addActionListener(this);
 
         this.add(panel, BorderLayout.CENTER);
         setVisible(true);
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("createQuiz")) {
+            DBManager dbManager = DBManager.getInstance();
+            int id = dbManager.getNextID("category");
+            Category category = new Category(id,categoryName.getText(), categoryDescription.getText(), 0);
+            dbManager.createCategory(category);
+        }
     }
 }

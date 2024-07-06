@@ -1,12 +1,16 @@
 package UI;
 
+import database.*;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Class for creating a quiz.
  */
-public class QuizCreator extends JPanel implements Creator{
+public class QuizCreator extends JPanel implements Creator, ActionListener {
     JLabel quizBuilder = new JLabel("Quiz Builder");
     JLabel quizNameLabel = new JLabel("Quiz Name");
     JTextField quizName = new JTextField();
@@ -26,7 +30,8 @@ public class QuizCreator extends JPanel implements Creator{
         this.setSize(1920, 1080);
         this.setLayout(new BorderLayout());
         quizCategory = new JComboBox<>(); //placeholder
-        //TODO: add categories to quizCategory JComboBox and make it usable
+        DBManager dbManager = DBManager.getInstance();
+        dbManager.getCategories().forEach(category -> quizCategory.addItem(category.getName()));
     }
     @Override
     public void showCreator() {
@@ -36,7 +41,7 @@ public class QuizCreator extends JPanel implements Creator{
 
         quizDescription.setLineWrap(true);
         quizDescription.setWrapStyleWord(true);
-        panel = componentsSetter(panel, 4,quizBuilder, quizNameLabel,quizCategoryLabel,quizDescriptionLabel,quizTimeLabel, quizName, quizCategory,quizDesc, quizTime, quizRandom, createQuiz, createAndAddQuestion, backToMenu);
+        panel = componentsSetter(panel, 4, quizBuilder, quizNameLabel, quizCategoryLabel, quizDescriptionLabel, quizTimeLabel, quizName, quizCategory, quizDesc, quizTime, quizRandom, createQuiz, createAndAddQuestion, backToMenu);
 
         //adjustments
         quizBuilder.setFont(new Font("Arial", Font.BOLD, 40));
@@ -45,11 +50,27 @@ public class QuizCreator extends JPanel implements Creator{
         backToMenu.setActionCommand("backToMenu");
         backToMenu.addActionListener(screenManager);
         createAndAddQuestion.addActionListener(screenManager);
-        createQuiz.addActionListener(screenManager);
-        //TODO: add action listeners and adding quiz to DB
-
+        createAndAddQuestion.addActionListener(this);
+        createQuiz.addActionListener(this);
 
         this.add(panel, BorderLayout.CENTER);
         setVisible(true);
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().contains("create")) { //handling the creation of a quiz with both buttons
+            DBManager dbManager = DBManager.getInstance();
+            int quizId = dbManager.getNextID("quiz");
+            int categoryId = dbManager.getCategory(quizCategory.getSelectedItem().toString()).getId();
+            try{
+                Quiz quiz = new Quiz(quizId, quizName.getText(), quizDescription.getText(), 0, Integer.parseInt(quizTime.getText()), false, !quizRandom.isSelected(), 0, categoryId);
+                dbManager.createQuiz(quiz);
+            }catch (CreatingException ex){
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            catch (NumberFormatException ex){
+                JOptionPane.showMessageDialog(this, "Please enter a number for the time limit", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 }
