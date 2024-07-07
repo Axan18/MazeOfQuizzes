@@ -7,7 +7,6 @@ public class Quiz {
     private String name;
     private String description;
     private int numberOfQuestions;
-    private int quizType;
     private int timeLimit;
     private boolean isDone;
     private boolean inOrder;
@@ -42,10 +41,6 @@ public class Quiz {
 
     public int getNumberOfQuestions() {
         return numberOfQuestions;
-    }
-
-    public int getQuizType() {
-        return quizType;
     }
 
     public int getTimeLimit() {

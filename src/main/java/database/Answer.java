@@ -15,6 +15,9 @@ public class Answer {
         this.isCorrect = isCorrect;
         this.questionId = questionId;
     }
+    public int getId() {
+        return id;
+    }
 
     public String getAnswer() {
         return answer;

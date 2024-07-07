@@ -63,7 +63,7 @@ public class CategoryCreator extends JPanel implements Creator, ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("createQuiz")) {
             DBManager dbManager = DBManager.getInstance();
-            int id = dbManager.getNextID("category");
+            int id = dbManager.getNextID(DBManager.TABLE_CATEGORIES);
             Category category = new Category(id,categoryName.getText(), categoryDescription.getText(), 0);
             dbManager.createCategory(category);
         }

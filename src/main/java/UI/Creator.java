@@ -1,5 +1,7 @@
 package UI;
 
+import database.Quiz;
+import org.jetbrains.annotations.NonBlocking;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

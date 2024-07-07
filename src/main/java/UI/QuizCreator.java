@@ -49,7 +49,6 @@ public class QuizCreator extends JPanel implements Creator, ActionListener {
         createQuiz.setActionCommand("createQuiz");
         backToMenu.setActionCommand("backToMenu");
         backToMenu.addActionListener(screenManager);
-        createAndAddQuestion.addActionListener(screenManager);
         createAndAddQuestion.addActionListener(this);
         createQuiz.addActionListener(this);
 
@@ -60,11 +59,17 @@ public class QuizCreator extends JPanel implements Creator, ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().contains("create")) { //handling the creation of a quiz with both buttons
             DBManager dbManager = DBManager.getInstance();
-            int quizId = dbManager.getNextID("quiz");
+            int quizId = dbManager.getNextID(DBManager.TABLE_QUIZZES);
             int categoryId = dbManager.getCategory(quizCategory.getSelectedItem().toString()).getId();
             try{
                 Quiz quiz = new Quiz(quizId, quizName.getText(), quizDescription.getText(), 0, Integer.parseInt(quizTime.getText()), false, !quizRandom.isSelected(), 0, categoryId);
+                screenManager.setQuiz(quiz);
                 dbManager.createQuiz(quiz);
+                //if quiz is created, go to the question creator or stay
+                if(e.getActionCommand().equals("createQuestion")) {
+                    ActionEvent event = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "createQuestion");
+                    screenManager.actionPerformed(event);
+                }
             }catch (CreatingException ex){
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }

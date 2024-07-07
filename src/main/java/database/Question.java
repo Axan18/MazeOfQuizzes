@@ -10,7 +10,9 @@ public class Question {
         this.question = question;
         this.quizId = quizId;
     }
-
+    public int getId() {
+        return id;
+    }
     public String getQuestion() {
         return question;
     }

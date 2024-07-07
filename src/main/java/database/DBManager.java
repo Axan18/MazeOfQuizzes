@@ -134,13 +134,14 @@ public class DBManager {
      * @param category Category object to be added
      */
     public void createCategory(Category category) {
-        String query = "Insert INTO " + TABLE_CATEGORIES + "(" + COLUMN_CATEGORY_NAME + ", " + COLUMN_CATEGORY_DESCRIPTION + ", " + COLUMN_CATEGORY_NUMBER_OF_QUIZZES + ") VALUES (?, ?, ?)";
+        String query = "Insert INTO " + TABLE_CATEGORIES + "("+COLUMN_CATEGORY_ID+ ", " + COLUMN_CATEGORY_NAME + ", " + COLUMN_CATEGORY_DESCRIPTION + ", " + COLUMN_CATEGORY_NUMBER_OF_QUIZZES + ") VALUES (?, ?, ?, ?)";
         try (Connection connection = getConnection()) {
             connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                preparedStatement.setString(1, category.getName());
-                preparedStatement.setString(2, category.getDescription());
-                preparedStatement.setInt(3, category.getNumberOfQuizzes());
+                preparedStatement.setInt(1, category.getId());
+                preparedStatement.setString(2, category.getName());
+                preparedStatement.setString(3, category.getDescription());
+                preparedStatement.setInt(4, category.getNumberOfQuizzes());
                 preparedStatement.executeUpdate();
                 connection.commit();
             } catch (SQLException e) {
@@ -157,18 +158,19 @@ public class DBManager {
      * @param quiz Quiz object to be added
      */
     public void createQuiz(Quiz quiz) throws CreatingException{
-        String query = "INSERT INTO " + TABLE_QUIZZES + "(" + COLUMN_QUIZ_NAME + ", " + COLUMN_QUIZ_DESCRIPTION + ", " + COLUMN_QUIZ_NUMBER_OF_QUESTIONS + ", " + COLUMN_QUIZ_TIME_LIMIT + ", " + COLUMN_QUIZ_IS_DONE + ", " + COLUMN_QUIZ_IN_ORDER + ", " + COLUMN_QUIZ_HIGH_SCORE + ", " + COLUMN_QUIZ_CATEGORY_ID + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO " + TABLE_QUIZZES + "(" + COLUMN_QUIZ_ID + ", " + COLUMN_QUIZ_NAME + ", " + COLUMN_QUIZ_DESCRIPTION + ", " + COLUMN_QUIZ_NUMBER_OF_QUESTIONS + ", " + COLUMN_QUIZ_TIME_LIMIT + ", " + COLUMN_QUIZ_IS_DONE + ", " + COLUMN_QUIZ_IN_ORDER + ", " + COLUMN_QUIZ_HIGH_SCORE + ", " + COLUMN_QUIZ_CATEGORY_ID + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = getConnection()) {
             connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                preparedStatement.setString(1, quiz.getName());
-                preparedStatement.setString(2, quiz.getDescription());
-                preparedStatement.setInt(3, quiz.getNumberOfQuestions());
-                preparedStatement.setInt(4, quiz.getTimeLimit());
-                preparedStatement.setInt(5, quiz.isDone()?1:0);
-                preparedStatement.setInt(6, quiz.isInOrder()?1:0);
-                preparedStatement.setInt(7, quiz.getHighScore());
-                preparedStatement.setInt(8, quiz.getCategoryId());
+                preparedStatement.setInt(1, quiz.getId());
+                preparedStatement.setString(2, quiz.getName());
+                preparedStatement.setString(3, quiz.getDescription());
+                preparedStatement.setInt(4, quiz.getNumberOfQuestions());
+                preparedStatement.setInt(5, quiz.getTimeLimit());
+                preparedStatement.setInt(6, quiz.isDone()?1:0);
+                preparedStatement.setInt(7, quiz.isInOrder()?1:0);
+                preparedStatement.setInt(8, quiz.getHighScore());
+                preparedStatement.setInt(9, quiz.getCategoryId());
                 preparedStatement.executeUpdate();
                 connection.commit();
             }catch (SQLException e) {
@@ -191,12 +193,13 @@ public class DBManager {
     public void createQuestion(Question question) {
         //TODO: add checking if quiz exists
 
-        String query = "INSERT INTO " + TABLE_QUESTIONS + "(" + COLUMN_QUESTION_QUESTION + ", " + COLUMN_QUESTION_QUIZ_ID + ") VALUES (?, ?)";
+        String query = "INSERT INTO " + TABLE_QUESTIONS + "(" + COLUMN_QUESTION_ID+ ", " + COLUMN_QUESTION_QUESTION + ", " + COLUMN_QUESTION_QUIZ_ID + ") VALUES (?, ?, ?)";
         try (Connection connection = getConnection()) {
             connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                preparedStatement.setString(1, question.getQuestion());
-                preparedStatement.setInt(2, question.getQuizId());
+                preparedStatement.setInt(1, question.getId());
+                preparedStatement.setString(2, question.getQuestion());
+                preparedStatement.setInt(3, question.getQuizId());
                 preparedStatement.executeUpdate();
                 connection.commit();
             } catch (SQLException e) {
@@ -215,13 +218,14 @@ public class DBManager {
     public void createAnswer(Answer answer) {
         //TODO: add checking if question exists
 
-        String query = "INSERT INTO " + TABLE_ANSWERS + "(" + COLUMN_ANSWER_ANSWER + ", " + COLUMN_ANSWER_IS_CORRECT + ", " + COLUMN_ANSWER_QUESTION_ID + ") VALUES (?, ?, ?)";
+        String query = "INSERT INTO " + TABLE_ANSWERS + "("+ COLUMN_ANSWER_ID+ ", " + COLUMN_ANSWER_ANSWER + ", " + COLUMN_ANSWER_IS_CORRECT + ", " + COLUMN_ANSWER_QUESTION_ID + ") VALUES (?, ?, ?, ?)";
         try (Connection connection = getConnection()) {
             connection.setAutoCommit(false);
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                preparedStatement.setString(1, answer.getAnswer());
-                preparedStatement.setInt(2, answer.isCorrect());
-                preparedStatement.setInt(3, answer.getQuestionId());
+                preparedStatement.setInt(1, answer.getId());
+                preparedStatement.setString(2, answer.getAnswer());
+                preparedStatement.setInt(3, answer.isCorrect());
+                preparedStatement.setInt(4, answer.getQuestionId());
                 preparedStatement.executeUpdate();
                 connection.commit();
             } catch (SQLException e) {
@@ -371,7 +375,7 @@ public class DBManager {
     public int getNextID(@NotNull String table)
     {
         String query;
-        int id=-1;
+        int id=0;
         switch (table)
         {
             case TABLE_CATEGORIES:

@@ -1,5 +1,7 @@
 package UI;
 
+import database.Quiz;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,6 +15,7 @@ public class ScreenManager implements ActionListener {
     private static volatile ScreenManager screenManager;
     private JFrame window;
     private JPanel panel;
+    private Quiz quiz;
 
     private ScreenManager() {
     }
@@ -87,7 +90,7 @@ public class ScreenManager implements ActionListener {
             }
             case QUESTION_CREATOR: {
                 if (!(panel instanceof QuestionCreator)) {
-                    panel = new QuestionCreator();
+                    panel = new QuestionCreator(quiz);
                 }
                 ((QuestionCreator) panel).showCreator();
                 break;
@@ -119,5 +122,8 @@ public class ScreenManager implements ActionListener {
             this.setCurrentScreen(Screens.QUESTION_CREATOR);
         }
         this.showScreen();
+    }
+    public void setQuiz(Quiz quiz) {
+        this.quiz = quiz;
     }
 }
