@@ -304,6 +304,11 @@ public class DBManager {
         }
         return categories;
     }
+    /**
+     * Method that returns a category for given category name from the database
+     * @param name category name to filter categories by
+     * @return Category object
+     */
     public Category getCategory(String name) {
         String query = "SELECT * FROM " + TABLE_CATEGORIES + " WHERE " + COLUMN_CATEGORY_NAME + " = ?";
         Category category = null;
@@ -366,7 +371,27 @@ public class DBManager {
         }
         return answers;
     }
-
+    /**
+     * Method that deletes a quiz of given ID from the database
+     * @param id quiz id to be deleted
+     */
+    public void deleteQuiz(int id)
+    {
+        String query = "DELETE FROM " + TABLE_QUIZZES + " WHERE " + COLUMN_QUIZ_ID + " = ?";
+        try (Connection connection = getConnection()) {
+            connection.setAutoCommit(false);
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, id);
+                preparedStatement.executeUpdate();
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * Method that returns the highest ID from the given table
      * @param table

@@ -5,7 +5,7 @@ package UI;
  */
 public enum Screens {
     START_MENU,
-    QUIZ_MENU,
+    QUIZZES_LIST,
     QUIZ_CREATOR_MENU,
     QUIZ_CREATOR,
     CATEGORY_CREATOR,

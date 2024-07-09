@@ -17,9 +17,7 @@ public class StartMenu extends JPanel implements Menu{
         this.setLayout(new BorderLayout());
         this.setBackground(Color.RED);
         screenManager = ScreenManager.getInstance();
-        //screenManager.setCurrentScreen(Screens.START_MENU);
     }
-
     /**
      * Shows the start menu.
      */

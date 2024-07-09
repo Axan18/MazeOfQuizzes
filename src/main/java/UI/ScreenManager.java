@@ -55,7 +55,7 @@ public class ScreenManager implements ActionListener {
         currentScreen = screen;
     }
     /**
-     * Shows the start screen and manipulates changes of them.
+     * Shows the start screen and manages changes of them.
      */
     public void showScreen() {
         window.remove(panel);
@@ -95,6 +95,13 @@ public class ScreenManager implements ActionListener {
                 ((QuestionCreator) panel).showCreator();
                 break;
             }
+            case QUIZZES_LIST: {
+                if (!(panel instanceof QuizList)) {
+                    panel = new QuizList();
+                }
+                ((QuizList) panel).showQuizzes();
+                break;
+            }
         }
         window.add(panel, BorderLayout.CENTER);
         window.revalidate();
@@ -107,11 +114,10 @@ public class ScreenManager implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if("creator".equals(e.getActionCommand()))
-        {
+            if("creator".equals(e.getActionCommand())) {
             this.setCurrentScreen(Screens.QUIZ_CREATOR_MENU);
         } else if ("quizzes".equals(e.getActionCommand())) {
-            this.setCurrentScreen(Screens.QUIZ_MENU);
+            this.setCurrentScreen(Screens.QUIZZES_LIST);
         } else if ("createQuiz".equals(e.getActionCommand())) {
             this.setCurrentScreen(Screens.QUIZ_CREATOR);
         } else if ("createCategory".equals(e.getActionCommand())) {
