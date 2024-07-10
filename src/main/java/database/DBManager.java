@@ -209,6 +209,8 @@ public class DBManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        incrementNumberOfQuestions(question.getQuizId());
+
     }
 
     /**
@@ -267,13 +269,17 @@ public class DBManager {
     public List<Quiz> getQuizzes() throws CreatingException{
         return getQuizzesByCategory(null);
     }
-    //TODO: check if it is needed
-    public Quiz getQuiz(String name) throws CreatingException{
-        String query = "SELECT * FROM " + TABLE_QUIZZES + " WHERE " + COLUMN_QUIZ_NAME + " = ?";
+    /**
+     * Method that returns a quiz for given quizID from the database
+     * @param id quiz id to filter quizzes by
+     * @return Quiz object
+     */
+    public Quiz getQuiz(int id) throws CreatingException{
+        String query = "SELECT * FROM " + TABLE_QUIZZES + " WHERE " + COLUMN_QUIZ_ID + " = ?";
         Quiz quiz = null;
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, name);
+            preparedStatement.setInt(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     quiz = new Quiz(resultSet.getInt(COLUMN_QUIZ_ID), resultSet.getString(COLUMN_QUIZ_NAME), resultSet.getString(COLUMN_QUIZ_DESCRIPTION), resultSet.getInt(COLUMN_QUIZ_NUMBER_OF_QUESTIONS), resultSet.getInt(COLUMN_QUIZ_TIME_LIMIT), resultSet.getInt(COLUMN_QUIZ_IS_DONE)==1, resultSet.getInt(COLUMN_QUIZ_IN_ORDER)==1, resultSet.getInt(COLUMN_QUIZ_HIGH_SCORE), resultSet.getInt(COLUMN_QUIZ_CATEGORY_ID));
@@ -426,5 +432,22 @@ public class DBManager {
             e.printStackTrace();
         }
         return id+1;
+    }
+
+    private void incrementNumberOfQuestions(int quizID) {
+        String query = "UPDATE " + TABLE_QUIZZES + " SET " + COLUMN_QUIZ_NUMBER_OF_QUESTIONS + " = " + COLUMN_QUIZ_NUMBER_OF_QUESTIONS + " + 1 WHERE " + COLUMN_QUIZ_ID + " = ?";
+        try (Connection connection = getConnection()) {
+            connection.setAutoCommit(false);
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, quizID);
+                preparedStatement.executeUpdate();
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

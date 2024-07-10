@@ -1,5 +1,7 @@
 package UI;
 
+import database.CreatingException;
+import database.DBManager;
 import database.Quiz;
 
 import javax.swing.*;
@@ -102,6 +104,13 @@ public class ScreenManager implements ActionListener {
                 ((QuizList) panel).showQuizzes();
                 break;
             }
+            case QUIZ_PLAY: {
+                if (!(panel instanceof QuizPlay)) {
+                    panel = new QuizPlay(quiz);
+                }
+                ((QuizPlay) panel).showQuiz();
+                break;
+            }
         }
         window.add(panel, BorderLayout.CENTER);
         window.revalidate();
@@ -126,6 +135,13 @@ public class ScreenManager implements ActionListener {
             this.setCurrentScreen(Screens.START_MENU);
         } else if ("createQuestion".equals(e.getActionCommand())) {
             this.setCurrentScreen(Screens.QUESTION_CREATOR);
+        } else if (e.getActionCommand().startsWith("playQuiz")) {
+                try {
+                    quiz = DBManager.getInstance().getQuiz(Integer.parseInt(e.getActionCommand().substring(8)));
+                } catch (CreatingException ex) {
+                    throw new RuntimeException(ex);
+                }
+                this.setCurrentScreen(Screens.QUIZ_PLAY);
         }
         this.showScreen();
     }

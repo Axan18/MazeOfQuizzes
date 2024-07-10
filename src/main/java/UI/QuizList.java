@@ -215,7 +215,7 @@ public class QuizList extends JPanel implements ActionListener {
                 delete.setMaximumSize(otherSize);
 
                 //TODO: add action listeners managing the buttons
-                start.setActionCommand("start " + quiz.getId()); //to change probably
+                start.setActionCommand("playQuiz" + quiz.getId()); //to change probably
                 start.addActionListener(ScreenManager.getInstance());
                 delete.addActionListener(this);
                 delete.setActionCommand("delete " + quiz.getId());

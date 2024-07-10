@@ -9,6 +9,7 @@ public enum Screens {
     QUIZ_CREATOR_MENU,
     QUIZ_CREATOR,
     CATEGORY_CREATOR,
-    QUESTION_CREATOR
+    QUESTION_CREATOR,
+    QUIZ_PLAY
 
 }
