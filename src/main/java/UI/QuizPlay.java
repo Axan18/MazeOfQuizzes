@@ -25,7 +25,8 @@ public class QuizPlay extends JPanel implements ActionListener {
     List<Question> questions;
     Map<Integer,List<Answer>> answers;
     int currentQuestion = -1;
-    int totalScore = 0;
+    double totalScore = 0;
+    ScreenManager screenManager = ScreenManager.getInstance();
 
     public QuizPlay(Quiz quiz) {
         this.setSize(1920, 1080);
@@ -36,6 +37,10 @@ public class QuizPlay extends JPanel implements ActionListener {
         quizName.setFont(new Font("Arial", Font.PLAIN, 30));
         time.setTime(quiz.getTimeLimit());
         questions = db.getQuestions(quiz.getId());
+        if(!quiz.isInOrder())
+        {
+            Collections.shuffle(questions);
+        }
         answers = new HashMap<>();
         for(Question q : questions)
         {
@@ -46,6 +51,9 @@ public class QuizPlay extends JPanel implements ActionListener {
     }
     public void showQuiz() {
         this.removeAll();
+        for (ActionListener al : next.getActionListeners()) {
+            next.removeActionListener(al);
+        }
         JPanel header = new JPanel();
         header.setLayout(new BorderLayout());
         header.add(quizName, BorderLayout.WEST);
@@ -63,17 +71,13 @@ public class QuizPlay extends JPanel implements ActionListener {
             gbc.insets = new Insets(100, 100, 100, 100);
             gbc.gridx = 0;
             gbc.gridy = 0;
-            //answersPanel.add(answerLabels.get(0), gbc);
             answersPanel.add(answerOptions.get(0).get(answerLabels.get(0)), gbc);
             gbc.gridx = 1;
-            //answersPanel.add(answerLabels.get(1), gbc);
             answersPanel.add(answerOptions.get(1).get(answerLabels.get(1)), gbc);
             gbc.gridx = 0;
             gbc.gridy = 1;
-            //answersPanel.add(answerLabels.get(2), gbc);
             answersPanel.add(answerOptions.get(2).get(answerLabels.get(2)), gbc);
             gbc.gridx = 1;
-            //answersPanel.add(answerLabels.get(3), gbc);
             answersPanel.add(answerOptions.get(3).get(answerLabels.get(3)), gbc);
         }
         catch(IndexOutOfBoundsException e) {/*do nothing*/}
@@ -86,27 +90,20 @@ public class QuizPlay extends JPanel implements ActionListener {
         this.add(questionPanel);
         this.add(answersPanel);
         this.add(footer);
+        this.revalidate();
+        this.repaint();
     }
 
     private void nextQuestion() {
         currentQuestion++;
         answerOptions.clear();
-        if(currentQuestion == quiz.getNumberOfQuestions())
+        question.setText(questions.get(currentQuestion).getQuestion());
+        int id = questions.get(currentQuestion).getId();
+        List<Answer> ans = answers.get(id);
+        for(Answer answer: ans)
         {
-            time.stop();
-            //show results
-        }
-        else
-        {
-            question.setText(questions.get(currentQuestion).getQuestion());
-            int id = questions.get(currentQuestion).getId();
-            List<Answer> ans = answers.get(id);
-            for(Answer answer: ans)
-            {
-                JCheckBox cb = new JCheckBox(answer.getAnswer());
-                answerOptions.add(Map.of(new JLabel(answer.getAnswer()),cb));
-            }
-
+            JCheckBox cb = new JCheckBox(answer.getAnswer());
+            answerOptions.add(Map.of(new JLabel(answer.getAnswer()),cb));
         }
     }
 
@@ -132,10 +129,30 @@ public class QuizPlay extends JPanel implements ActionListener {
                 }
             }
         }
-        int correct = (int) (correctAnswers.size()-correctAnswers.stream().filter(selectedAnswers::contains).count());
-        int score = correct/correctAnswers.size();
-        totalScore += score;
-        nextQuestion();
-        showQuiz();
+        double fraction = 1.0/correctAnswers.size(); //fraction of correct answers
+        double correct = (correctAnswers.stream().filter(selectedAnswers::contains).count()); //number of selected correct answers
+        double score = (fraction*correct - fraction*(selectedAnswers.size()-correct)); //score for this question
+        totalScore += score>=0?score:0;
+        if(currentQuestion == quiz.getNumberOfQuestions()-1)
+        {
+            currentQuestion = -1;
+            int decision = JOptionPane.showConfirmDialog(this, "Your score is: " + totalScore+'/'+ quiz.getNumberOfQuestions() + "\n Do you want to retake quiz?", "Results", JOptionPane.YES_NO_OPTION);
+            if(decision == JOptionPane.YES_OPTION)
+            {
+                time.stop();
+                totalScore = 0;
+                nextQuestion();
+                screenManager.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "playQuiz"+quiz.getId()));
+            }
+            else
+            {
+                screenManager.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "backToMenu"));
+            }
+        }
+        else
+        {
+            nextQuestion();
+            showQuiz();
+        }
     }
 }

@@ -68,22 +68,12 @@ public class DBManager {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(URL);
+            Statement statement = connection.createStatement();
+            statement.execute("PRAGMA foreign_keys = ON;");
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return connection;
-    }
-
-    /**
-     * Method that closes the connection to the database
-     * @param connection current open Connection
-     */
-    public void closeConnection(Connection connection) {
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -106,18 +96,21 @@ public class DBManager {
                         COLUMN_QUIZ_IS_DONE + " INTEGER NOT NULL, " +
                         COLUMN_QUIZ_IN_ORDER + " INTEGER NOT NULL, " +
                         COLUMN_QUIZ_HIGH_SCORE + " INTEGER NOT NULL, " +
-                        COLUMN_QUIZ_CATEGORY_ID + " INTEGER NOT NULL)";
+                        COLUMN_QUIZ_CATEGORY_ID + " INTEGER NOT NULL)" ;
         String questions =
                 "CREATE TABLE IF NOT EXISTS " + TABLE_QUESTIONS + " (" +
                         COLUMN_QUESTION_ID + " INTEGER PRIMARY KEY, " +
                         COLUMN_QUESTION_QUESTION + " TEXT NOT NULL, " +
-                        COLUMN_QUESTION_QUIZ_ID + " INTEGER NOT NULL)";
+                        COLUMN_QUESTION_QUIZ_ID + " INTEGER NOT NULL, " +
+                        "FOREIGN KEY (" + COLUMN_QUESTION_QUIZ_ID + ") REFERENCES " + TABLE_QUIZZES + "(" + COLUMN_QUIZ_ID + ") ON DELETE CASCADE)";
         String answers =
                 "CREATE TABLE IF NOT EXISTS " + TABLE_ANSWERS + " (" +
                         COLUMN_ANSWER_ID + " INTEGER PRIMARY KEY, " +
                         COLUMN_ANSWER_ANSWER + " TEXT NOT NULL, " +
                         COLUMN_ANSWER_IS_CORRECT + " INTEGER NOT NULL, " +
-                        COLUMN_ANSWER_QUESTION_ID + " INTEGER NOT NULL)";
+                        COLUMN_ANSWER_QUESTION_ID + " INTEGER NOT NULL," +
+                        "FOREIGN KEY (" + COLUMN_ANSWER_QUESTION_ID + ") REFERENCES " + TABLE_QUESTIONS + "(" + COLUMN_QUESTION_ID + ")" +
+                        "ON DELETE CASCADE)";
         try (Connection connection = getConnection();
                 Statement statement = connection.createStatement()) {
                 statement.execute(categories);

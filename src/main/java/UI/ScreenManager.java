@@ -91,9 +91,9 @@ public class ScreenManager implements ActionListener {
                 break;
             }
             case QUESTION_CREATOR: {
-                if (!(panel instanceof QuestionCreator)) {
+                //if (!(panel instanceof QuestionCreator)) {
                     panel = new QuestionCreator(quiz);
-                }
+                //}
                 ((QuestionCreator) panel).showCreator();
                 break;
             }
